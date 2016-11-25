@@ -17,7 +17,8 @@ void menu(char &c, Dictionary &dict)
 	cout << "5. Просмотр словаря.\n";
 	cout << "6. Вывод словаря в файл.\n";
 	cout << "7. Смена режима словаря.\n";
-	cout << "8. Выход\n";
+	cout << "8. Сортиовка словаря.\n";
+	cout << "q. Выход\n";
 	cout << "===========================================\n";
 	cout << " Режим словаря: " << dict.viewMode(); 
 	cout << endl;
@@ -29,7 +30,8 @@ int main()
 {
 	char c, r;
 	char path[256] = "";
-	fstream file;
+	ifstream ifile;
+	ofstream ofile;
 	Dictionary dict;
 	do {
 		menu(c, dict);
@@ -41,11 +43,13 @@ int main()
 				if (r == 'y') {
 					cout << "Введите имя файла: ";		
 					cin >> path;
-					file.open(path);
-					if (file.fail()) cout << "Ошибка чтения файла\n";
+					ifile.clear();
+					ifile.open(path);
+					if (ifile.fail()) cout << "Ошибка чтения файла\n";
 					else {
-						dict.loadWords(file);
-						file.close();
+						dict.loadWords(ifile);
+						ifile.close();
+						dict.sort(0);
 					}
 				} else {
 					dict.loadWords(cin);
@@ -67,25 +71,31 @@ int main()
 			case '6':
 				cout << "Введите имя файла для вывода: ";		
 				cin >> path;
-				file.open(path);
-				if (file.fail()) cout << "Ошибка чтения файла\n";
+				ofile.clear();
+				ofile.open(path);
+				if (ofile.fail()) cout << "Ошибка чтения файла\n";
 				else {
-					dict.print(file);
-					file.close();
+					dict.print(ofile);
+					ofile.close();
 				}
 				break;
 			case '7':
-				dict.changeMode();
+				dict.toggleMode();
 				break;
 			case '8':
+				cout << "По убыванию/возрастанию? (a/z) ";
+				cin >> r;
+				if (r == 'a') dict.sort(0);
+				else dict.sort(1);
+				break;
+			case 'q':
 				cout << "Завершение работы программы\n";
-				return 0;
 				break;
 			default:
 				cout << "Нет такой операции ..." << endl;
 		}
 		system("pause");
-	} while (c != '8');
+	} while (c != 'q');
 	return 0;
 }
 //---------------------------------------------------------------------------

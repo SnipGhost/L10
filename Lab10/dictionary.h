@@ -23,16 +23,16 @@ struct Word
 class Dictionary
 {
 	private:
-		Word **w;
-		unsigned count, size;
-		bool mode;
+		Word **w;             // Массив слов (пары рус-анг)
+		unsigned count, size; // текущее кол-во и размер
+		bool mode;            // 1: EN-RU, 0: RU-EN
 
 	public:
 		Dictionary();
 		~Dictionary();
-		char *viewMode();
-		void changeMode();
-		void sort();
+		char *viewMode();     // Просмотреть режим словаря
+		void toggleMode();    // Сменить режим словаря
+		void sort(bool type); // Сортировка по алфавиту (0: а-я, 1: я-а)
 		void add(char *eng, char *rus);
 		//unsigned search(char *word);
 		//void del();

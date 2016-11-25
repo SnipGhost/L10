@@ -15,7 +15,7 @@ Dictionary::Dictionary()
 {
 	size = DICT_LEN;
 	count = 0;
-	mode = 0;
+	mode = 1;
 	if (DEBUG) cout << "[..] Инициализация словаря\n";
 	w = new Word *[size];
 	if (DEBUG) cout << "[OK] Инициализация словаря\n";
@@ -30,15 +30,29 @@ Dictionary::~Dictionary()
 //---------------------------------------------------------------------------
 char * Dictionary::viewMode() { return (mode) ? "EN-RU" : "RU-EN"; }
 //---------------------------------------------------------------------------
-void Dictionary::changeMode()
+void Dictionary::toggleMode()
 {
 	mode = !mode;
 	cout << "Текущий режим словаря: " << viewMode() << endl;
 }
 //---------------------------------------------------------------------------
-void Dictionary::sort()
+void Dictionary::sort(bool type)
 {
-	//
+	for (unsigned i = 0; i < count; ++i)
+	{
+		Word *m = w[i];
+		unsigned index = i;
+		for (unsigned j = i+1; j < count; ++j)
+		{
+			int cp = (mode) ? strcmp(w[j]->en, m->en) : strcmp(w[j]->ru, m->ru);
+			if ((type) ? cp > 0 : cp < 0) {
+				m = w[j];
+				index = j;
+			}
+		}
+		w[index] = w[i];
+		w[i] = m;
+	}
 }
 //---------------------------------------------------------------------------
 void Dictionary::add(char *eng, char *rus)
@@ -46,7 +60,7 @@ void Dictionary::add(char *eng, char *rus)
 	if (count >= size) {
 		if (DEBUG) cout << "[..] Выделение дополнительной памяти\n";
 		Word **buf = new Word *[size + STEP_ALLOC];
-		for (int i = 0; i < count; ++i) buf[i] = w[i];
+		for (unsigned i = 0; i < count; ++i) buf[i] = w[i];
 		delete w;
 		w = buf;
 		size += STEP_ALLOC;
@@ -66,7 +80,7 @@ void Dictionary::add(char *eng, char *rus)
 void Dictionary::print(ostream &output)
 {
 	for (unsigned i = 0; i < count; ++i)
-		output << w[i]->en << " - " << w[i]->ru << endl;
+		output << w[i]->en << " " << w[i]->ru << endl;
 }
 //---------------------------------------------------------------------------
 void Dictionary::loadWords(istream &in)
