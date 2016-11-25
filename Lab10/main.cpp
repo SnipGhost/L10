@@ -44,11 +44,11 @@ int main()
 					file.open(path);
 					if (file.fail()) cout << "Ошибка чтения файла\n";
 					else {
-						loadWords(file, dict);
+						dict.loadWords(file);
 						file.close();
 					}
 				} else {
-					loadWords(cin, dict);
+					dict.loadWords(cin);
 				}
 				break;
 			}

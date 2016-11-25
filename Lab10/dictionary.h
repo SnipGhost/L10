@@ -32,14 +32,13 @@ class Dictionary
 		~Dictionary();
 		char *viewMode();
 		void changeMode();
+		void sort();
 		void add(char *eng, char *rus);
 		//unsigned search(char *word);
 		//void del();
 		void print(ostream &out);
-		//void sort();
+		void loadWords(istream &in);
 };
-//---------------------------------------------------------------------------
-void loadWords(istream &in, Dictionary &dict);
 //---------------------------------------------------------------------------
 #endif /* DICTIONARY_H */
 //---------------------------------------------------------------------------

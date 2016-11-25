@@ -36,6 +36,11 @@ void Dictionary::changeMode()
 	cout << "Текущий режим словаря: " << viewMode() << endl;
 }
 //---------------------------------------------------------------------------
+void Dictionary::sort()
+{
+	//
+}
+//---------------------------------------------------------------------------
 void Dictionary::add(char *eng, char *rus)
 {
 	if (count >= size) {
@@ -64,7 +69,7 @@ void Dictionary::print(ostream &output)
 		output << w[i]->en << " - " << w[i]->ru << endl;
 }
 //---------------------------------------------------------------------------
-void loadWords(istream &in, Dictionary &dict)
+void Dictionary::loadWords(istream &in)
 {
 	if (DEBUG) cout << "[..] Чтение потока\n";
 	const int maxlen = 256;
@@ -76,7 +81,7 @@ void loadWords(istream &in, Dictionary &dict)
 	{
 		if (strlen(line) == 0) break;
 		token = strtok_s(line, delims, &next_token);
-		dict.add(token, next_token);
+		add(token, next_token);
 	}
 	if (DEBUG) cout << "[OK] Чтение потока\n";
 }
