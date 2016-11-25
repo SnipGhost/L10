@@ -12,6 +12,7 @@ using namespace std;
 #define DEBUG 1        // Вывод отладочной информации вкл/выкл (1/0)
 #define DICT_LEN 2     // Изначальная длина словаря
 #define STEP_ALLOC 5   // Кол-во довыделяемой памяти за раз
+#define MAX_LEN 256    // Максимальная длина слова
 //--------------------------------------------------------------------------
 struct Word
 {
@@ -31,12 +32,18 @@ class Dictionary
 	public:
 		Dictionary();
 		~Dictionary();
+
 		char *viewMode();     // Просмотреть режим словаря
 		void toggleMode();    // Сменить режим словаря
 		void sort(bool type); // Сортировка по алфавиту (0: а-я, 1: я-а)
-		void add(char *eng, char *rus); // Добавить пару анг-рус в словарь
-		unsigned search(char *word);    // Поиск указанного слова в словаре
-		//void del(char *word);         // Найти и уничтожить все слова word
+
+		void add(const char *eng, const char *rus); // Добавить слово
+
+		int search(const char *word);              // Двоичный поиск слова
+		void translate(istream &in, ostream &out); // Перевод слов
+
+		void del(istream &in);       // Найти и уничтожить все слова word
+
 		void print(ostream &output); // Распечатать весь словарь
 		void printWord(ostream &output, unsigned index); // Напечатать слово
 		void loadWords(istream &in); // Загрузить слова из потока

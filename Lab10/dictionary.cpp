@@ -5,7 +5,7 @@
 //--------------------------------------------------------------------------
 Word::~Word()
 {
-	if (DEBUG) cout << "[..] Удаление слова (" << ru << "/" << en << ")\n";
+	if (DEBUG) cout << "[..] Удаление слова (" << en << "/" << ru << ")\n";
 	delete [] ru;
 	delete [] en;
 	if (DEBUG) cout << "[OK] Удаление слова (---/---)\n";
@@ -66,7 +66,7 @@ void Dictionary::sort(bool type)
 //---------------------------------------------------------------------------
 // Добавить пару анг-рус в словарь
 //---------------------------------------------------------------------------
-void Dictionary::add(char *eng, char *rus)
+void Dictionary::add(const char *eng, const char *rus)
 {
 	if (count >= size) {
 		if (DEBUG) cout << "[..] Выделение дополнительной памяти\n";
@@ -90,9 +90,73 @@ void Dictionary::add(char *eng, char *rus)
 //---------------------------------------------------------------------------
 // Поиск указанного слова в словаре
 //---------------------------------------------------------------------------
-unsigned search(char *word)
+int Dictionary::search(const char *word)
 {
-	return 0;
+	if (count == 0) return -1;
+	sort(0);
+	unsigned a = 0, b = count-1, c = -1, c_old = 0;
+	if (DEBUG) cout << "[..] Двоичный поиск слова\n";
+	int tp = (mode) ? strcmp(w[b]->en, word) : strcmp(w[b]->ru, word);
+	if (tp == 0) {
+		if (DEBUG) cout << "[OK] Двоичный поиск слова\n";
+		return b;
+	}
+	while (c != c_old) 
+	{
+		c_old = c;
+		c = (a+b)/2+0.5;	
+		int cp = (mode) ? strcmp(w[c]->en, word) : strcmp(w[c]->ru, word);
+		if (cp == 0) {
+			if (DEBUG) cout << "[OK] Двоичный поиск слова\n";
+			return c;
+		}
+		else if (cp < 0) a = c;
+		else b = c;
+	}
+	if (DEBUG) cout << "[NO] Двоичный поиск слова\n";
+	return -1;
+}
+//---------------------------------------------------------------------------
+// Поиск и перевод заданного слова
+//---------------------------------------------------------------------------
+void Dictionary::translate(istream &in, ostream &out)
+{
+	char word[MAX_LEN];
+	in >> word;
+	int ind = search(word);
+	if (ind == -1) out << "Слово '" << word << "' не найдено\n";
+	else out << ((mode) ? w[ind]->ru : w[ind]->en) << endl;
+}
+//---------------------------------------------------------------------------
+// Удалить ВСЕ заданные слова из словаря
+//---------------------------------------------------------------------------
+void Dictionary::del(istream &in)
+{
+	if (DEBUG) cout << "[..] Чтение потока\n";
+	char line[MAX_LEN], *token, *next_token;
+	const char *delims = ":|- =";
+	in.ignore(MAX_LEN, '\n');
+	in.clear();
+	while (in.getline(line, MAX_LEN) && count > 0) 
+	{
+		if (strlen(line) == 0) break;
+		token = strtok_s(line, delims, &next_token);
+		while (token != NULL)
+		{
+			int st = search(token);
+			if (DEBUG) cout << "[..] Удаление всех копий слова\n";
+			while (st != -1) {
+				delete w[st];
+				for (int i = st; i < count-1; ++i)
+					w[i] = w[i+1];
+				count--;
+				st = search(token);
+			}
+			if (DEBUG) cout << "[OK] Удаление всех копий слова\n";
+			token = strtok_s(NULL, delims, &next_token);
+		}
+	}
+	if (DEBUG) cout << "[OK] Чтение потока\n";
 }
 //---------------------------------------------------------------------------
 // Распечатать весь словарь
@@ -117,12 +181,11 @@ void Dictionary::printWord(ostream &output, unsigned index)
 void Dictionary::loadWords(istream &in)
 {
 	if (DEBUG) cout << "[..] Чтение потока\n";
-	const int maxlen = 256;
-	char line[maxlen], *token, *next_token;
+	char line[MAX_LEN], *token, *next_token;
 	const char *delims = ":|- =";
-	in.ignore(maxlen, '\n');
+	in.ignore(MAX_LEN, '\n');
 	in.clear();
-	while (in.getline(line, maxlen)) 
+	while (in.getline(line, MAX_LEN)) 
 	{
 		if (strlen(line) == 0) break;
 		token = strtok_s(line, delims, &next_token);

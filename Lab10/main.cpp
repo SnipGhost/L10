@@ -28,7 +28,7 @@ void menu(char &c, Dictionary &dict)
 //---------------------------------------------------------------------------
 int main()
 {
-	char c, r;
+	char c = 0, r;
 	char path[256] = "";
 	ifstream ifile;
 	ofstream ofile;
@@ -57,13 +57,14 @@ int main()
 				break;
 			}
 			case '2':
-				cout << "Не готово\n";
+				dict.del(cin);
 				break;
 			case '3':
-				cout << "Не готово\n";
+				dict.translate(cin, cout);
 				break;
 			case '4':
-				cout << "Не готово\n";
+				cin >> path;
+				cout << dict.search(path) << endl;
 				break;
 			case '5':
 				dict.print(cout);
