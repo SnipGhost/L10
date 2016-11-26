@@ -94,24 +94,19 @@ int Dictionary::search(const char *word)
 {
 	if (count == 0) return -1;
 	sort(0);
-	unsigned a = 0, b = count-1, c = -1, c_old = 0;
+	unsigned a = 0, b = count-1, c;
 	if (DEBUG) cout << "[..] Двоичный поиск слова\n";
-	int tp = (mode) ? strcmp(w[b]->en, word) : strcmp(w[b]->ru, word);
-	if (tp == 0) {
-		if (DEBUG) cout << "[OK] Двоичный поиск слова\n";
-		return b;
-	}
-	while (c != c_old) 
+	while (a <= b) 
 	{
-		c_old = c;
-		c = (a+b)/2+0.5;	
-		int cp = (mode) ? strcmp(w[c]->en, word) : strcmp(w[c]->ru, word);
+		c = (a + b) / 2;	
+		int cp = (mode) ? strcmp(word, w[c]->en) : strcmp(word, w[c]->ru);
+		cout << a << " " << c << " " << b << endl;
 		if (cp == 0) {
 			if (DEBUG) cout << "[OK] Двоичный поиск слова\n";
 			return c;
 		}
-		else if (cp < 0) a = c;
-		else b = c;
+		else if (cp > 0) a = c + 1;
+		else b = c - 1;
 	}
 	if (DEBUG) cout << "[NO] Двоичный поиск слова\n";
 	return -1;
