@@ -2,10 +2,10 @@ delete удалить
 key ключ
 yep ага
 wow воу
-new новый
 hey эй
 xeno странный
 alias синоним
+no нет
 boring скучный
 aaaaah ах
 for для
