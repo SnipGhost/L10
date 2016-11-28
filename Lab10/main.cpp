@@ -21,17 +21,19 @@ Action menu(Dictionary &dict)
 	system("cls");
 	system("chcp 1251 > nul");
 	cout << "================= Словарь =================\n";
-	cout << char(ADD_WORDS) << ". Добавить слова в словарь.\n";
-	cout << char(DELETE_WORDS) << ". Удалить слова из словаря.\n";
-	cout << char(TRANSLATE_WORDS) << ". Перевод указанных слов.\n";
-	cout << char(VIEW_DICTIONARY) << ". Просмотр словаря.\n";
-	cout << char(SAVE_DICTIONARY) << ". Вывод словаря в файл.\n";
-	cout << char(TOGGLE_MODE) << ". Смена режима словаря.\n";
-	cout << char(SORT_DICTIONARY) << ". Сортиовка словаря.\n";
-	cout << char(END_PROGRAM) << ". Выход\n";
+	cout << " " << char(ADD_WORDS) << ". Добавить слова в словарь.\n";
+	cout << " " << char(DELETE_WORDS) << ". Удалить слова из словаря.\n";
+	cout << " " << char(TRANSLATE_WORDS) << ". Перевод указанных слов.\n";
+	cout << " " << char(VIEW_DICTIONARY) << ". Просмотр словаря.\n";
+	cout << " " << char(SAVE_DICTIONARY) << ". Вывод словаря в файл.\n";
+	cout << " " << char(TOGGLE_MODE) << ". Смена режима словаря.\n";
+	cout << " " << char(SORT_DICTIONARY) << ". Сортиовка словаря.\n";
+	cout << " " << char(END_PROGRAM) << ". Выход\n";
 	cout << "===========================================\n";
 	cout << " Режим словаря: " << dict.viewMode(); 
 	cout << endl;
+	cout << "===========================================\n";
+	cout << " МГТУ им Н.Э.Баумана ИУ5-14 | By SnipGhost \n";
 	cout << "===========================================\n";
 	char c;
 	cin >> c;
@@ -63,6 +65,7 @@ int main()
 						dict.sort(0);
 					}
 				} else {
+					cout << "Вводите по два слова через пробел, завершите пустой строкой:\n";
 					cin.ignore(MAX_LEN, '\n');
 					cin.clear();
 					dict.loadWords(cin);
@@ -83,6 +86,7 @@ int main()
 						ifile.close();
 					}
 				} else {
+					cout << "Вводите слова, завершите пустой строкой:\n";
 					cin.ignore(MAX_LEN, '\n');
 					cin.clear();
 					dict.del(cin);
@@ -161,6 +165,7 @@ int main()
 			default:
 				cout << "Нет такой операции ..." << endl;
 		}
+		cout << endl;
 		system("pause");
 	}
 }
