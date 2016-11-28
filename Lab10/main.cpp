@@ -5,26 +5,37 @@
 //---------------------------------------------------------------------------
 using namespace std;
 //---------------------------------------------------------------------------
-char menu(Dictionary &dict)
+enum Action {
+	ADD_WORDS = '1',
+	DELETE_WORDS,
+	TRANSLATE_WORDS,
+	VIEW_DICTIONARY,
+	SAVE_DICTIONARY,
+	TOGGLE_MODE,
+	SORT_DICTIONARY,
+	END_PROGRAM = 'q'
+};
+//---------------------------------------------------------------------------
+Action menu(Dictionary &dict)
 {
 	system("cls");
 	system("chcp 1251 > nul");
 	cout << "================= Словарь =================\n";
-	cout << "1. Добавить слова в словарь.\n";
-	cout << "2. Удалить слова из словаря.\n";
-	cout << "3. Перевод указанных слов.\n";
-	cout << "4. Просмотр словаря.\n";
-	cout << "5. Вывод словаря в файл.\n";
-	cout << "6. Смена режима словаря.\n";
-	cout << "7. Сортиовка словаря.\n";
-	cout << "q. Выход\n";
+	cout << char(ADD_WORDS) << ". Добавить слова в словарь.\n";
+	cout << char(DELETE_WORDS) << ". Удалить слова из словаря.\n";
+	cout << char(TRANSLATE_WORDS) << ". Перевод указанных слов.\n";
+	cout << char(VIEW_DICTIONARY) << ". Просмотр словаря.\n";
+	cout << char(SAVE_DICTIONARY) << ". Вывод словаря в файл.\n";
+	cout << char(TOGGLE_MODE) << ". Смена режима словаря.\n";
+	cout << char(SORT_DICTIONARY) << ". Сортиовка словаря.\n";
+	cout << char(END_PROGRAM) << ". Выход\n";
 	cout << "===========================================\n";
 	cout << " Режим словаря: " << dict.viewMode(); 
 	cout << endl;
 	cout << "===========================================\n";
 	char c;
 	cin >> c;
-	return c;
+	return Action(c);
 }
 //---------------------------------------------------------------------------
 int main()
@@ -35,8 +46,9 @@ int main()
 	ofstream ofile;
 	Dictionary dict;
 	while (true) {
-		switch (menu(dict)) {
-			case '1':
+		switch (menu(dict)) 
+		{
+			case ADD_WORDS:
 				cout << "Добавить слова из файла? (f/-) ";
 				cin >> r;
 				if (r == 'f') {
@@ -56,7 +68,8 @@ int main()
 					dict.loadWords(cin);
 				}
 				break;
-			case '2':
+
+			case DELETE_WORDS:
 				cout << "Удалить все слова, которые есть в файле? (f/-) ";
 				cin >> r;
 				if (r == 'f') {
@@ -75,7 +88,8 @@ int main()
 					dict.del(cin);
 				}	
 				break;
-			case '3':
+
+			case TRANSLATE_WORDS:
 			{
 				cout << "Ввод из файла? (f/-) ";
 				cin >> r;
@@ -112,10 +126,12 @@ int main()
 				ofile.close();
 				break;
 			}
-			case '4':
+
+			case VIEW_DICTIONARY:
 				dict.print(cout);
 				break;
-			case '5':
+
+			case SAVE_DICTIONARY:
 				cout << "Введите имя файла для вывода: ";		
 				cin >> path;
 				ofile.clear();
@@ -126,23 +142,26 @@ int main()
 					ofile.close();
 				}
 				break;
-			case '6':
+
+			case TOGGLE_MODE:
 				dict.toggleMode();
 				break;
-			case '7':
+
+			case SORT_DICTIONARY:
 				cout << "По убыванию/возрастанию? (y - по убыванию) ";
 				cin >> r;
 				dict.sort(!(r == 'y'));
 				break;
-			case 'q':
+
+			case END_PROGRAM:
 				cout << "Завершение работы программы\n";
 				return 0;
 				break;
+
 			default:
 				cout << "Нет такой операции ..." << endl;
 		}
 		system("pause");
 	}
-
 }
 //---------------------------------------------------------------------------

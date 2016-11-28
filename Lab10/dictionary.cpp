@@ -5,6 +5,17 @@
 //--------------------------------------------------------------------------
 const char *delims = " ,.!?:;/\\|-+=()<>{}[]#'\"";
 //--------------------------------------------------------------------------
+Word::Word(const char *eng, const char *rus)
+{
+	if (DEBUG) cout << "[..] Инициализация слова\n";
+	unsigned len1 = strlen(eng) + 1, len2 = strlen(rus) + 1;
+	en = new char[len1];
+	ru = new char[len2];
+	strcpy_s(en, len1, eng);
+	strcpy_s(ru, len2, rus);
+	if (DEBUG) cout << "[OK] Инициализация слова\n";
+}
+//--------------------------------------------------------------------------
 Word::~Word()
 {
 	if (DEBUG) cout << "[..] Удаление слова (" << en << "/" << ru << ")\n";
@@ -55,7 +66,7 @@ void Dictionary::sort(bool type)
 		unsigned index = i;
 		for (unsigned j = i+1; j < count; ++j)
 		{
-			int cp = (mode) ? strcmp(w[j]->en, m->en) : strcmp(w[j]->ru, m->ru);
+			int cp = mode ? strcmp(w[j]->en, m->en) : strcmp(w[j]->ru, m->ru);
 			if ((type) ? cp > 0 : cp < 0) {
 				m = w[j];
 				index = j;
@@ -68,7 +79,7 @@ void Dictionary::sort(bool type)
 //---------------------------------------------------------------------------
 // Добавить пару анг-рус в словарь
 //---------------------------------------------------------------------------
-void Dictionary::add(const char *eng, const char *rus)
+void Dictionary::add(Word *new_word)
 {
 	if (count >= size) {
 		if (DEBUG) cout << "[..] Выделение дополнительной памяти\n";
@@ -79,15 +90,10 @@ void Dictionary::add(const char *eng, const char *rus)
 		size += STEP_ALLOC;
 		if (DEBUG) cout << "[OK] Выделение дополнительной памяти\n";
 	}
-	if (DEBUG) cout << "[..] Создание нового слова\n";
-	Word *new_word = new Word;
-	new_word->en = new char[strlen(eng)+1];
-	new_word->ru = new char[strlen(rus)+1];
-	strcpy_s(new_word->en, strlen(eng)+1, eng);
-	strcpy_s(new_word->ru, strlen(rus)+1, rus);
+	if (DEBUG) cout << "[..] Добавление нового слова\n";
 	w[count] = new_word;
 	count++;
-	if (DEBUG) cout << "[OK] Создание нового слова\n";
+	if (DEBUG) cout << "[OK] Добавление нового слова\n";
 }
 //---------------------------------------------------------------------------
 // Поиск указанного слова в словаре
@@ -190,8 +196,13 @@ void Dictionary::loadWords(istream &in)
 	{
 		if (strlen(line) == 0) break;
 		token = strtok_s(line, delims, &next_token);
-		if (mode) add(token, next_token);
-		else add(next_token, token);
+		if (!mode) {
+			char *buf = token;
+			token = next_token;
+			next_token = buf;
+		}
+		Word *new_word = new Word(token, next_token);
+		add(new_word);
 	}
 	if (DEBUG) cout << "[OK] Чтение потока\n";
 }
